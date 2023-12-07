@@ -1,26 +1,24 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('./firebase.json');
+const connectToMongoDB = require('./mongoConnection');
+// const User = require('./models/users');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://payfood-7925c-default-rtdb.europe-west1.firebasedatabase.app",
-});
-
-
-const firebaseAuth = admin.auth();
-
-app.get('/loyalty-points/:userId', async (req, res) => {
+async function run() {
   try {
-    const userId = req.params.userId;
-    const decodedToken = await firebaseAuth.verifyIdToken(req.headers.authorization);
-    const uid = decodedToken.uid;
-    if (uid !== userId) {
-      return res.status(403).json({ error: 'Accès non autorisé' });
-    }
-    const loyaltyPoints = await LoyaltyPoints.findOne({ userId });
-    res.json(loyaltyPoints);
+    const client = await connectToMongoDB();
+    console.log('connexion ok',client)
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur interne du serveur' });
+    console.error("Error in main application:", error);
   }
-});
+  // try {
+  //   const allUsers = await User.find();
+  //   console.log("Tous les utilisateurs:", allUsers);
+
+  // } catch (error) {
+  //   console.error("Error in main application:", error);
+  // } finally {
+  //   if (client) {
+  //     await client.close();
+  //   }
+  // }
+}
+
+run().catch(console.dir);

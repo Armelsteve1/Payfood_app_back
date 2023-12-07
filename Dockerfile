@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Commande pour exécuter l'application
-CMD ["node", "app.js"]
+CMD ["node", "mongoConnection.js"]
